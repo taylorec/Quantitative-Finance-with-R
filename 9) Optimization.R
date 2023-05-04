@@ -2,8 +2,6 @@ library(corrplot)
 library(PerformanceAnalytics)
 library(tseries)
 library(xts)
-library(Quandl)
-Quandl.api_key("fn-jfrd1jkpKosDRQFsA")
 library(quantmod)
 library(copula)
 library(ggplot2)
@@ -13,7 +11,7 @@ getSymbols("ENPH", from='2020-01-01', to='2021-01-24')
 getSymbols("NEE",  from='2020-01-01', to='2021-01-24')
 getSymbols("XOM",  from='2020-01-01', to='2021-01-24')
 getSymbols("FSLR", from='2020-01-01', to='2021-01-24')
-df_stock <- Ad(cbind(ENPH, NEE, XOM, FSLR))
+
 df_stock
 df_stock_ret <- diff(log(df_stock))
 df_stock_ret <- df_stock_ret[-1, ] #xts object
@@ -60,9 +58,9 @@ sig.NEE.FSLR <- rho.NEE.FSLR*sig.NEE*sig.FSLR
 sig.XOM.FSLR <- rho.XOM.FSLR*sig.XOM*sig.FSLR
 
 #Portfolio Frontier Value at Risk (VaR)
-Pft.portion1 <- seq(from=0.1, to=0.4, by=0.01)
+Pft.portion1 <- seq(from=-0.4, to=0.4, by=0.01)
 Pft.portion2 <- 1-Pft.portion1
-Pft.portion3 <- seq(from=0.1, to=0.4, by=0.01)
+Pft.portion3 <- seq(from=-0.4, to=0.4, by=0.01)
 Pft.portion4 <- 1-Pft.portion1
 mu.p <- (Pft.portion1*mu.ENPH) + (Pft.portion2*mu.NEE) + 
  	(Pft.portion3*mu.XOM) + (Pft.portion4*mu.FSLR)

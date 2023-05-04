@@ -131,6 +131,7 @@ SharpeRatio.annualized(trade_return, Rf = 0)
 # Co-integration based pairs trading
 adf.test(sym2) # price is not stationary
 adf.test(ret.sym[,2]) # return is stationary
+po.test(pairs.trd, demean=TRUE, lshort=TRUE)
 model <- lm(pairs.trd[,2] ~ pairs.trd[,3] + 0)
 
 # extract residuals and test for unit roots
@@ -196,3 +197,4 @@ abline(model2,col="red")
 
 par(mfrow = c(2, 2))
 plot(model2)
+

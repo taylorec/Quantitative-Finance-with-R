@@ -5,6 +5,7 @@ library(forecast)
 library(rugarch)
 library(rmgarch)
 library(vars)
+
 getSymbols('SONY')
 sym <- SONY$SONY.Adjusted
 sym <- window(sym,start="2011-07-01")
@@ -36,7 +37,7 @@ par(mfrow=c(1,2))
 acf(PriceDiff, lag.max = 10)
 pacf(PriceDiff, lag.max = 10)
 
-# Series shows (2,1,2)
+# Series shows (2,1,3)
 arima_model <- auto.arima(sym)
 arima_model
 tsdiag(arima_model)
@@ -72,6 +73,7 @@ quantile(ret.sym, probs=0.01)
 par(mfrow=c(1,2))
 acf(ret.sym, lag.max = 10)
 pacf(ret.sym, lag.max = 10)
+Box.test(ret.sym, lag=20, type='Ljung-Box') # null hypothesis of white noise
 
 # ARIMA
 arima_ret <- auto.arima(ret.sym)
@@ -108,7 +110,7 @@ ylab=ni.egarch11$yexpr, xlab=ni.egarch11$xexpr)
 
 
 ## Cointegration - Cross hedging jet fuel
-setwd('C:/Users/evan/Documents/Data')
+setwd('C:/Users/evana/Documents/Data')
 library("urca")
 prices <- read.zoo("JetFuelHedging.csv", sep = ",", FUN = as.yearmon, format = "%Y-%m", header = TRUE)
 head(prices)
@@ -120,6 +122,10 @@ summary(simple_mod)
 plot(prices$JetFuel, main = "Jet Fuel and Heating Oil Prices", xlab = "Date", ylab = "USD")
 lines(prices$HeatingOil, col = "red")
 cor(prices)
+
+# null hypothesis states that the two series are not cointegrated
+po.coint <- po.test(prices, demean = TRUE, lshort = TRUE)
+po.coint
 
 # Jet Fuel unit root (non-stationarity) test (Dickey-Fuller test)
 # The null hypothesis of non-stationarity
@@ -149,7 +155,7 @@ summary(mod_ecm)
 
 # Vector autoregressive models (VAR)
 getSymbols('MSFT', from='2021-01-02', to='2022-06-30')
-getSymbols('SNP', from='2021-01-02', , to='2022-06-30')
+getSymbols('^GSPC', from='2021-01-02', to='2022-06-30')
 getSymbols('DTB3', src='FRED')
 
 #  daily close-to-close returns
@@ -157,12 +163,12 @@ chartSeries(ClCl(MSFT))
 
 # Log returns
 ret.MSFT <- dailyReturn(MSFT, type='log')
-ret.SNP <- dailyReturn(SNP, type='log')
+ret.GSPC <- dailyReturn(GSPC, type='log')
 ret.DTB3 <- dailyReturn(DTB3, type='log')
-dataDaily <- na.omit(merge(ret.SNP,ret.MSFT,ret.DTB3), join='inner')
+dataDaily <- na.omit(merge(ret.GSPC,ret.MSFT,ret.DTB3), join='inner')
 
 # Monthly Closing Prices
-SNP.M  <- to.monthly(ret.SNP)$SNP.ret.Close
+GSPC.M  <- to.monthly(ret.GSPC)$GSPC.ret.Close
 MSFT.M <- to.monthly(ret.MSFT)$MSFT.ret.Close
 DTB3.M <- to.monthly(ret.DTB3)$DTB3.sub.Close
 
@@ -207,5 +213,3 @@ kurtosis(ret.MSFT)
 # Deviations from this straight line may indicate the presence of fat tails
 qqnorm(ret.MSFT)
 qqline(ret.MSFT)
-
-

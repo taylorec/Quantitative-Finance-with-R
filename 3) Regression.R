@@ -27,7 +27,6 @@ returns <- as.data.frame(returns)
 # Scatter Plot
 YPrice = returns$DIS
 XPrice = returns$NKE
-plot(YPrice, XPrice, xlab="XPrice", ylab="YPrice")
 cor(returns)
 
 # Regression Model
@@ -61,6 +60,15 @@ summary(MultipleR.lm)
 MultiR.res = resid(MultipleR.lm)
 plot(YPrice, MultiR.res, ylab="Residuals", xlab="YPrice", 
                           main="Residual Plot")
+qqnorm(MultiR.res, ylab="Standardized Residuals",
+       xlab="Normal Scores",  
+       main="Error Normal Distribution plot")  
+qqline(MultiR.res)
 
 # Multicollinearity
-car::vif(MultipleR.lm) 
+car::vif(MultipleR.lm)
+
+qqnorm(MultiR.res, ylab="Standardized Residuals",
+       xlab="Normal Scores",  
+       main="Error Normal Distribution plot")  
+qqline(MultiR.res)

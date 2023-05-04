@@ -36,7 +36,7 @@ matplot(x = seq(0, Time, dt), y = N[, 1:5], type = 's', xlab = 'Time',
     main = 'Trajectories of Cox processes ')
 
 
-# Correlated defaults – the portfolio approach
+# Correlated defaults - the portfolio approach
 library(copula)
 # opula class with an 0.7 correlation
 norm.cop <- normalCopula(0.7)

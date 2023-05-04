@@ -6,8 +6,8 @@ getSymbols('NKE')
 sym <- DIS$DIS.Adjusted
 sym2 <- NKE$NKE.Adjusted
 
-ret.sym <- dailyReturn(sym)
-ret.sym2 <- dailyReturn(sym2)
+ret.sym <- dailyReturn(sym, type='log')
+ret.sym2 <- dailyReturn(sym2, type='log')
 
 x = mean(ret.sym)
 s = sd(ret.sym)
@@ -38,9 +38,12 @@ plot(vol,y)
 # cdf for volume
 plnorm(vol, mean = mean(vol), sd = sd(vol))
 y <- plnorm(vol, meanlog = mean(vol), sdlog= sd(vol))
-plot(vol,y)
+plot(y)
 
 # quantiles of the distribution
+ret.sym <- dailyReturn(sym)
+x = mean(ret.sym)
+s = sd(ret.sym)
 head(qnorm(ret.sym, x, s))
 
 # quantiles of the log distribution
@@ -52,6 +55,7 @@ head(qlnorm(ret.sym, x, s))
 mean(DIS$DIS.Volume) # Mean trading volume
 median(DIS$DIS.Volume) # median trading volume
 
+# summary statistics
 summary(DIS$DIS.Volume)
 summary(DIS$DIS.Adjusted)
 
@@ -60,6 +64,9 @@ moment(DIS$DIS.Volume, order=3, center=TRUE)
 kurtosis(DIS$DIS.Volume)
 skewness(DIS$DIS.Volume)
 
+# correlation
+ret.sym <- dailyReturn(sym)
+ret.sym2 <- dailyReturn(sym2)
 ret.sym <- window(ret.sym, start='2017-01-01')
 ret.sym2 <- window(ret.sym2, start='2017-01-01')
 cor(ret.sym, ret.sym2, method="pearson") 
@@ -90,12 +97,14 @@ X2 <- DIS$DIS.Low
 fit <- lm(Y ~ X1+X2) 
 summary(fit) 
 
-# Boxplot
+# Outlier detection with Boxplot
 boxplot(vol, main="Volume", boxwex=0.1) # boxplot of volume
 boxplot(ret.sym, main="Returns", boxwex=0.1) # boxplot of returns
 
 # Quantile Plot
-qplot(ret.sym, main="Returns")
+chart.QQPlot(ret.sym, main="Returns")
+
+hist(ret.sym)
 
 # Standardization (z scores)
 scale(vol, center=TRUE, scale=FALSE) 
@@ -107,6 +116,7 @@ scale(ret.sym, center=TRUE, scale=TRUE) # entered column values are divided by t
 ## normalized = (x-min(x))/(max(x)-min(x))
 X2 <- (vol - min(vol))/(max(vol)-min(vol))
 
+# Regression
 Y<-DIS$DIS.Close
 X1<-DIS$DIS.Open 
 fit <- lm(Y ~ X1+X2) 

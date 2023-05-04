@@ -5,10 +5,10 @@ library(PerformanceAnalytics)
 getSymbols('^GSPC', from='2016-01-01')
 getSymbols('NKE', from='2016-01-01')
 getSymbols('SONY', from='2016-01-01')
-getSymbols('DIS', from='2016-01-01')
+getSymbols('UA', from='2016-01-01')
 sym1 <- NKE$NKE.Adjusted
 sym2 <- SONY$SONY.Adjusted
-sym3 <- DIS$DIS.Adjusted
+sym3 <- UA$UA.Adjusted
 mr <- GSPC$GSPC.Adjusted
 ret1 <- dailyReturn(sym1, type='log')
 ret2 <- dailyReturn(sym2, type='log')
@@ -31,7 +31,7 @@ CAPM.beta(ret2, mr.ret)
 VaR(ret2, p=0.99) # value at risk at 1%
 ES(ret2, p=0.99) # expected short fall at 1%
 
-# DIS beta 
+# UA beta 
 plot(density(ret3))
 CAPM.alpha(ret3, mr.ret)
 CAPM.beta(ret3, mr.ret)
@@ -52,3 +52,7 @@ sim_norm_ret3<-rnorm(n_sim, ret3.mean, ret3.sd)
 VaR(sim_norm_ret1, p=0.99)
 VaR(sim_norm_ret2, p=0.99)
 VaR(sim_norm_ret3, p=0.99)
+
+plot(density(sim_norm_ret1))
+plot(density(sim_norm_ret2))
+plot(density(sim_norm_ret3))
