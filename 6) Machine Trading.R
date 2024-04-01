@@ -22,7 +22,7 @@ y <- xts(0.001, date)
 ret.sym1 <- rbind(ret.sym1, y)
 ret.sym2 <- rbind(ret.sym2, y)
 
-# Lag Predictor Features
+# Lag Predictor Features 
 ret.sym3 <- Lag(ret.sym1,k=1)
 ret.sym4 <- Lag(ret.sym1,k=2)
 ret.sym5 <- Lag(ret.sym1,k=3)
